@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadAreas } from '../data';
+const areas = loadAreas().filter(a => a.kwh !== null).sort((a, b) => a.name.localeCompare(b.name));
+---
+<Base title="Is solar worth it where you live? UK area-by-area data | WhatsWattWorth" description="Solar output data for every UK local authority, from the EU's PVGIS model. See how much sun your area really gets before you ask for quotes." canonical="/">
+<main><div class="wrap">
+<section class="hero">
+<div class="eyebrow">UK solar data, area by area</div>
+<h1>Is solar worth it where <em>you</em> live?</h1>
+<p class="lede">A panel in Cornwall produces far more than the same panel in the Highlands, yet most advice treats the whole country the same. Find your local authority to see the real numbers for your area.</p>
+</section>
+
+<label for="q"><strong>Find your area</strong></label>
+<input id="q" type="search" placeholder="Start typing, e.g. Leeds" autocomplete="off" style="display:block;width:100%;margin:8px 0 16px;padding:12px 14px;font-size:17px;border:1px solid var(--line);border-radius:10px;background:#fff">
+<ul id="list" style="list-style:none;padding:0;columns:2;column-gap:24px">
+  {areas.map(a => <li data-n={a.name.toLowerCase()} style="margin-bottom:6px"><a href={`/solar/${a.slug}`}>{a.name}</a></li>)}
+</ul>
+<p id="none" style="display:none" class="updated">No area matches that. Try a shorter name.</p>
+
+<h2>Where the numbers come from</h2>
+<p>Every figure is calculated from the European Commission's PVGIS model and published the same way for every area. Read the <a href="/methodology">methodology</a> to see exactly how, and the <a href="/disclosure">affiliate disclosure</a> to see how the site is funded.</p>
+</div></main>
+<script is:inline>
+  var q=document.getElementById('q'),items=document.querySelectorAll('#list li'),none=document.getElementById('none');
+  q.addEventListener('input',function(){var v=q.value.trim().toLowerCase(),shown=0;items.forEach(function(li){var ok=li.dataset.n.indexOf(v)>-1;li.style.display=ok?'':'none';if(ok)shown++;});none.style.display=shown?'none':'block';});
+</script>
+</Base>
